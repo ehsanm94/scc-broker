@@ -16,7 +16,7 @@
     "sc-framework-health-check": "^2.0.0",
     "socketcluster": "^14.3.2",
     "socketcluster-client": "^14.2.1",
-    "uws": "^10.148.0"
+    "uws": "10.148.0"
   },
   "keywords": [
     "socketcluster",
