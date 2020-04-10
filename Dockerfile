@@ -1,28 +1,27 @@
-FROM node:10.20.0-alpine AS builder
+FROM mhart/alpine-node:10 AS builder
 
-WORKDIR /srv
+RUN apk add python make g++
 
-RUN apk add --update \ 
-        g++ \
-        make \
-        python \
-    && npm install uws@10.148.0
+WORKDIR /app
+COPY package* ./
+
+ENV NPM_CONFIG_LOGLEVEL info
+RUN npm install --production
 
 
-FROM node:10.20.0-alpine
+FROM mhart/alpine-node:slim-10
 LABEL maintainer="Ehsan Mokhtari"
-
 LABEL version="6.0.2"
 LABEL description="Docker file for SCC Broker Server"
 
+RUN addgroup -g 1000 node \
+    && adduser -u 1000 -G node -s /bin/sh -D node
+
 USER node
 WORKDIR /home/node
+COPY --chown=node:node --from=builder /app .
 COPY . .
-
-RUN npm install --production
-
-COPY --chown=node:node --from=builder /srv/node_modules/uws node_modules/uws
 
 EXPOSE 8888
 
-CMD ["npm", "start"]
+CMD ["node", "server.js"]
