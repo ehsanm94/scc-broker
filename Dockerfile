@@ -20,7 +20,7 @@ RUN addgroup -g 1000 node \
 USER node
 WORKDIR /home/node
 COPY --chown=node:node --from=builder /app .
-COPY . .
+COPY --chown=node:node . .
 
 EXPOSE 8888
 
